@@ -238,6 +238,7 @@ runs:
         CREATE_SUB_CERT: ${{ inputs.create_sub_cert }}
         NO_CERT: ${{ inputs.no_cert }}
         BITOPS_FAST_FAIL: true
+        DOCKER_FORCE_BUILD: ${{ inputs.docker_force_build }}
         DOCKER_REMOVE_ORPHANS: ${{ inputs.docker_remove_orphans }}
         DOCKER_FULL_CLEANUP: ${{ inputs.docker_full_cleanup }}
         APP_DIRECTORY: ${{ inputs.app_directory }}
