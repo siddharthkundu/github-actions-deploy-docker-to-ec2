@@ -262,6 +262,12 @@ variable "docker_remove_orphans" {
   default     = false
 }
 
+variable "docker_force_build" {
+  type        = bool
+  description = "define if builds should be forced"
+  default    = false
+}
+
 ## -- --- -- ##
 variable "availability_zone" {
   type        = string
