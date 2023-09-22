@@ -268,13 +268,13 @@ variable "docker_force_build" {
   default    = false
 }
 
-variable "registry_username {
+variable "registry_username" {
   type        = string
   description = "username of docker registry"
   default     = null
 }
 
-variable "registry_password {
+variable "registry_password" {
   type        = string
   description = "password of docker registry"
   default     = null
