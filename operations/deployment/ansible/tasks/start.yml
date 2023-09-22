@@ -1,8 +1,8 @@
 - name: Start docker-compose
   ansible.builtin.command: "docker compose --project-directory {{ app_install_root }}/{{ app_repo_name }} up --detach --build={{ docker_force_build }} --force-recreate --remove-orphans={{ docker_remove_orphans }}"
   environment:
-    REGISTRY_USERNAME: "{{ lookup('ansible.builtin.env', 'REGISTRY_USERNAME') }}"
-    REGISTRY_PASSWORD: "{{ lookup('ansible.builtin.env', 'REGISTRY_PASSWORD') }}"
+    REGISTRY_USERNAME: "{{ registry_username }}"
+    REGISTRY_PASSWORD: "{{ registry_password }}"
   register: output
 
 - ansible.builtin.debug:

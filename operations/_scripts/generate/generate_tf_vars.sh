@@ -160,7 +160,9 @@ data_mount_target=$(generate_var data_mount_target $DATA_MOUNT_TARGET)
 ec2_volume_size=$(generate_var ec2_volume_size $EC2_VOLUME_SIZE)
 docker_remove_orphans=$(generate_var docker_remove_orphans $DOCKER_REMOVE_ORPHANS)
 docker_force_build=$(generate_var docker_force_build $DOCKER_FORCE_BUILD)
-
+# docker repository credentials
+registry_username=$(generate_var registry_username $REGISTRY_USERNAME)
+registry_password=$(generate_var registry_password $REGISTRY_PASSWORD)
 
 # -------------------------------------------------- #
 
@@ -240,5 +242,7 @@ $efs_mount_target
 $data_mount_target
 $docker_remove_orphans
 $docker_force_build
+$registry_username
+$registry_password
 
 " > "${GITHUB_ACTION_PATH}/operations/deployment/terraform/terraform.tfvars"
