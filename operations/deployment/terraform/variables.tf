@@ -274,6 +274,12 @@ variable "registry_username" {
   default     = null
 }
 
+variable "registry_hostname" {
+  type        = string
+  description = "hostname of docker registry"
+  default     = null
+}
+
 variable "registry_password" {
   type        = string
   description = "password of docker registry"

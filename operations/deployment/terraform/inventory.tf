@@ -18,6 +18,7 @@ resource "local_file" "ansible_inventory" {
     data_mount_target        = var.data_mount_target
     docker_remove_orphans    = var.docker_remove_orphans
     docker_force_build       = var.docker_force_build
+    registry_hostname        = var.registry_hostname
     registry_username        = var.registry_username
     registry_password        = var.registry_password
   })

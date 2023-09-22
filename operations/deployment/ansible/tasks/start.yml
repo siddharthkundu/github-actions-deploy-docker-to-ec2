@@ -1,3 +1,10 @@
+- name: Perform docker login
+  docker_login:
+    registry: "{{ registry_hostname }}"
+    username: "{{ registry_username }}"
+    password: "{{ registry_password }}"
+    reauthorize: yes
+
 - name: Start docker-compose
   ansible.builtin.command: "docker compose --project-directory {{ app_install_root }}/{{ app_repo_name }} up --detach --build={{ docker_force_build }} --force-recreate --remove-orphans={{ docker_remove_orphans }}"
   environment:
