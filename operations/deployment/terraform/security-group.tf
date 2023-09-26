@@ -1,3 +1,7 @@
+data "aws_vpc" "default" {
+  default = true
+}
+
 resource "aws_security_group" "ec2_security_group" {
   name        = var.aws_resource_identifier
   description = "SG for ${var.aws_resource_identifier}"
@@ -17,14 +21,13 @@ data "aws_security_group" "ec2_security_group" {
   id = aws_security_group.ec2_security_group.id
 }
 
-
 resource "aws_security_group_rule" "ingress_http" {
   type              = "ingress"
   description       = "${var.aws_resource_identifier} - Port"
   from_port         = tonumber(var.app_port)
   to_port           = tonumber(var.app_port)
   protocol          = "tcp"
-  cidr_blocks       = ["80.79.194.23/32","80.79.194.3/32"]
+  cidr_blocks       = ["80.79.194.23/32","80.79.194.3/32",data.aws_vpc.default.cidr_block]
   security_group_id = aws_security_group.ec2_security_group.id
 }
 
