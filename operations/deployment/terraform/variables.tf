@@ -286,6 +286,12 @@ variable "registry_password" {
   default     = null
 }
 
+variable "imagetag" {
+  type        = string
+  description = "tag of the image to deploy"
+  default     = null
+}
+
 ## -- --- -- ##
 variable "availability_zone" {
   type        = string

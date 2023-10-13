@@ -76,6 +76,7 @@ aws_security_group_name_pg="aws_security_group_name_pg = \"${GITHUB_IDENTIFIER}-
 registry_username="registry_username = \"${REGISTRY_USERNAME}\""
 registry_password="registry_password = \"${REGISTRY_PASSWORD}\""
 registry_hostname="registry_hostname = \"${REGISTRY_HOSTNAME}\""
+imagetag="imagetag = \"${IMAGETAG}\""
 
 # Special cases
 
@@ -249,5 +250,6 @@ $docker_force_build
 $registry_username
 $registry_password
 $registry_hostname
+$imagetag
 
 " > "${GITHUB_ACTION_PATH}/operations/deployment/terraform/terraform.tfvars"

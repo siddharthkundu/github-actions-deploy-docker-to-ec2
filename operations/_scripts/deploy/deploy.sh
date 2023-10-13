@@ -63,6 +63,7 @@ docker run --rm --name bitops \
 -e REGISTRY_HOSTNAME="${REGISTRY_HOSTNAME}" \
 -e REGISTRY_USERNAME="${REGISTRY_USERNAME}" \
 -e REGISTRY_PASSWORD="${REGISTRY_PASSWORD}" \
+-e IMAGETAG="${IMAGETAG}" \
 -e DEFAULT_FOLDER_NAME="_default" \
 -e BITOPS_FAST_FAIL="${BITOPS_FAST_FAIL}" \
 -v $(echo $GITHUB_ACTION_PATH)/operations:/opt/bitops_deployment \

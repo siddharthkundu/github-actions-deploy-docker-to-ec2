@@ -10,6 +10,7 @@
   environment:
     REGISTRY_USERNAME: "{{ registry_username }}"
     REGISTRY_PASSWORD: "{{ registry_password }}"
+    IMAGETAG: "{{ imagetag }}"
   register: output
 
 - ansible.builtin.debug:

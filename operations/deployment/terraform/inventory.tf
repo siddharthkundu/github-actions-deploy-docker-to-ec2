@@ -21,6 +21,7 @@ resource "local_file" "ansible_inventory" {
     registry_hostname        = var.registry_hostname
     registry_username        = var.registry_username
     registry_password        = var.registry_password
+    imagetag                 = var.imagetag
   })
   filename = format("%s/%s", abspath(path.root), "inventory.yaml")
 }
