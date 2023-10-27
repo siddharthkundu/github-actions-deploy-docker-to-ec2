@@ -190,7 +190,7 @@ The following inputs can be used as `step.with` keys
 | `aws_postgres_engine_version` | String |  Specify Postgres version.  More information [here](https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/AuroraPostgreSQL.Updates.20180305.html). Default is `11.13`. |
 | `aws_postgres_instance_class` | String | Define the size of the instances in the DB cluster. Default is `db.t3.medium`. | 
 | `aws_postgres_subnets` | String | Specify which subnets to use as a list of strings.  Example: `i-1234,i-5678,i-9101`. |
-| `aws_postgres_database_name` | String | Specify a database name. Will be created if it does not exist. Default is `root`. |
+| `aws_postgres_database_name` | String | Specify a database name. Multiple databases can be specified by comma separation. Will be created if it does not exist. Default is `root`. |
 | `aws_postgres_database_port` | String | Specify a listening port for the database. Default is `5432`.|
 | `aws_postgres_database_group_family` | String | Specify aws postgres group family. Default is `aurora-postgresql11`. See [this](https://awscli.amazonaws.com/v2/documentation/api/latest/reference/rds/create-db-parameter-group.html).|
 | `aws_postgres_database_protection` | Boolean | Protects the database from deletion. Default is `false`.|

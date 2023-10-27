@@ -13,7 +13,6 @@ resource "aws_security_group" "pg_security_group" {
   }
 }
 
-
 resource "aws_security_group_rule" "ingress_postgres" {
   count = var.aws_enable_postgres == "true" ? 1 : 0
   type              = "ingress"
@@ -26,26 +25,19 @@ resource "aws_security_group_rule" "ingress_postgres" {
 }
 
 module "rds_cluster" {
-  count = var.aws_enable_postgres == "true" ? 1 : 0
+  count          = var.aws_enable_postgres == "true" ? 1 : 0
   depends_on     = [data.aws_subnets.vpc_subnets]
   source         = "terraform-aws-modules/rds-aurora/aws"
   version        = "v7.7.1"
   name           = var.aws_resource_identifier
   engine         = var.aws_postgres_engine
   engine_version = var.aws_postgres_engine_version
-  instance_class = var.aws_postgres_instance_class
-  instances = {
-    1 = {
-      instance_class = var.aws_postgres_instance_class
-    }
-  }
 
-    # Todo: handle vpc/networking explicitly
+  # Todo: handle vpc/networking explicitly
   # vpc_id                 = var.vpc_id
   # allowed_cidr_blocks    = [var.vpc_cidr]
   subnets                  = var.aws_postgres_subnets == null || length(var.aws_postgres_subnets) == 0 ? data.aws_subnets.vpc_subnets.ids : var.aws_postgres_subnets
 
-  database_name          = var.aws_postgres_database_name
   port                   = var.aws_postgres_database_port
   deletion_protection    = var.aws_postgres_database_protection
   storage_encrypted      = true
@@ -98,6 +90,32 @@ module "rds_cluster" {
   enabled_cloudwatch_logs_exports = var.aws_postgres_engine == "aurora-postgresql" ? ["postgresql"] : ["audit","error","general","slowquery"]
   tags = {
     Name = "${var.aws_resource_identifier}-RDS"
+  }
+}
+
+resource "rds_cluster_instance" "aurora" {
+  cluster_identifier  = rds_cluster.aurora.id
+  instance_class      = var.aws_postgres_instance_class
+  engine              = rds_cluster.aurora.engine
+  engine_version      = rds_cluster.aurora.engine_version
+  apply_immediately   = true
+  publicly_accessible = false
+}
+
+provider "postgresql" {
+  host     = rds_cluster_instance.aurora.endpoint
+  database = rds_cluster.aurora.database_name
+  port     = var.aws_postgres_database_port
+}
+
+resource "postgresql_database" "db" {
+  dynamic "database_list" {
+    for_each  = split(",", var.aws_postgres_database_name)
+
+    content {
+      name  = database_list.value
+      owner = rds_cluster_instance.aurora.master_username
+    }
   }
 }
 

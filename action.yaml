@@ -167,7 +167,7 @@ inputs:
     description: 'Specify which subnets to use as a list of strings.  Example: `i-1234,i-5678,i-9101`'
     required: false
   aws_postgres_database_name:
-    description: 'Specify a database name. Will be created if it does not exist'
+    description: 'Specify a database name. Multiple databases can be specified by comma separation. Will be created if it does not exist'
     required: false
     # TODO: create another user and point to that instead
   aws_postgres_database_port:
