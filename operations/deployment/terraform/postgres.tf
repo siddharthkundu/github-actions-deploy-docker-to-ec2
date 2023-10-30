@@ -27,7 +27,7 @@ resource "aws_security_group_rule" "ingress_postgres" {
 resource "aws_rds_cluster" "aurora" {
   count          = var.aws_enable_postgres == "true" ? 1 : 0
   depends_on     = [data.aws_subnets.vpc_subnets]
-  name           = var.aws_resource_identifier
+  cluster_identifier = var.aws_resource_identifier
   engine         = var.aws_postgres_engine
   engine_version = var.aws_postgres_engine_version
 
