@@ -27,8 +27,6 @@ resource "aws_security_group_rule" "ingress_postgres" {
 resource "aws_rds_cluster" "aurora" {
   count          = var.aws_enable_postgres == "true" ? 1 : 0
   depends_on     = [data.aws_subnets.vpc_subnets]
-  source         = "terraform-aws-modules/rds-aurora/aws"
-  version        = "v7.7.1"
   name           = var.aws_resource_identifier
   engine         = var.aws_postgres_engine
   engine_version = var.aws_postgres_engine_version
@@ -36,57 +34,23 @@ resource "aws_rds_cluster" "aurora" {
   # Todo: handle vpc/networking explicitly
   # vpc_id                 = var.vpc_id
   # allowed_cidr_blocks    = [var.vpc_cidr]
-  subnets                  = var.aws_postgres_subnets == null || length(var.aws_postgres_subnets) == 0 ? data.aws_subnets.vpc_subnets.ids : var.aws_postgres_subnets
+  #subnets                  = var.aws_postgres_subnets == null || length(var.aws_postgres_subnets) == 0 ? data.aws_subnets.vpc_subnets.ids : var.aws_postgres_subnets
 
   port                   = var.aws_postgres_database_port
   deletion_protection    = var.aws_postgres_database_protection
   storage_encrypted      = true
-  monitoring_interval    = 60
-  create_db_subnet_group = true
   db_subnet_group_name   = "${var.aws_resource_identifier}-pg"
-  create_security_group  = false
   vpc_security_group_ids = [aws_security_group.pg_security_group[0].id]
 
   # TODO: take advantage of iam database auth
   iam_database_authentication_enabled    = true
   master_password                        = random_password.rds.result
-  create_random_password                 = false
   apply_immediately                      = true
   skip_final_snapshot                    = var.aws_postgres_database_final_snapshot == "" ? true : false
   snapshot_identifier                    = var.aws_postgres_database_final_snapshot
-  create_db_cluster_parameter_group      = true
   db_cluster_parameter_group_name        = var.aws_resource_identifier
-  db_cluster_parameter_group_family      = var.aws_postgres_database_group_family
-  db_cluster_parameter_group_description = "${var.aws_resource_identifier}  cluster parameter group"
-  db_cluster_parameter_group_parameters = var.aws_postgres_engine == "aurora-postgresql" ? [
-    {
-      name         = "log_min_duration_statement"
-      value        = 4000
-      apply_method = "immediate"
-      }, {
-      name         = "rds.force_ssl"
-      value        = 1
-      apply_method = "immediate"
-    }
-  ] : [
-    {
-      name         = "require_secure_transport"
-      value        = "ON"
-      apply_method = "immediate"
-    }
-  ]
 
-  create_db_parameter_group      = true
-  db_parameter_group_name        = var.aws_resource_identifier
-  db_parameter_group_family      = var.aws_postgres_database_group_family
-  db_parameter_group_description = "${var.aws_resource_identifier} example DB parameter group"
-  db_parameter_group_parameters = var.aws_postgres_engine == "aurora-postgresql" ? [
-    {
-      name         = "log_min_duration_statement"
-      value        = 4000
-      apply_method = "immediate"
-    }
-  ] : []
+  db_instance_parameter_group_name        = var.aws_resource_identifier
   enabled_cloudwatch_logs_exports = var.aws_postgres_engine == "aurora-postgresql" ? ["postgresql"] : ["audit","error","general","slowquery"]
   tags = {
     Name = "${var.aws_resource_identifier}-RDS"
@@ -94,6 +58,7 @@ resource "aws_rds_cluster" "aurora" {
 }
 
 resource "aws_rds_cluster_instance" "aurora" {
+  db_subnet_group_name   = "${var.aws_resource_identifier}-pg"
   cluster_identifier  = aws_rds_cluster.aurora.id
   instance_class      = var.aws_postgres_instance_class
   engine              = aws_rds_cluster.aurora.engine
