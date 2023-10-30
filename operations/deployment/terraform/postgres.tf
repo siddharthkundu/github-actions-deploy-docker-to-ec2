@@ -24,7 +24,7 @@ resource "aws_security_group_rule" "ingress_postgres" {
   security_group_id = aws_security_group.pg_security_group[0].id
 }
 
-resource "rds_cluster" "aurora" {
+resource "aws_rds_cluster" "aurora" {
   count          = var.aws_enable_postgres == "true" ? 1 : 0
   depends_on     = [data.aws_subnets.vpc_subnets]
   source         = "terraform-aws-modules/rds-aurora/aws"
@@ -93,18 +93,18 @@ resource "rds_cluster" "aurora" {
   }
 }
 
-resource "rds_cluster_instance" "aurora" {
-  cluster_identifier  = rds_cluster.aurora.id
+resource "aws_rds_cluster_instance" "aurora" {
+  cluster_identifier  = aws_rds_cluster.aurora.id
   instance_class      = var.aws_postgres_instance_class
-  engine              = rds_cluster.aurora.engine
-  engine_version      = rds_cluster.aurora.engine_version
+  engine              = aws_rds_cluster.aurora.engine
+  engine_version      = aws_rds_cluster.aurora.engine_version
   apply_immediately   = true
   publicly_accessible = false
 }
 
 provider "postgresql" {
-  host     = rds_cluster_instance.aurora.endpoint
-  database = rds_cluster.aurora.database_name
+  host     = aws_rds_cluster_instance.aurora.endpoint
+  database = aws_rds_cluster.aurora.database_name
   port     = var.aws_postgres_database_port
 }
 
@@ -114,7 +114,7 @@ resource "postgresql_database" "db" {
 
     content {
       name  = database_list.value
-      owner = rds_cluster_instance.aurora.master_username
+      owner = aws_rds_cluster_instance.aurora.master_username
     }
   }
 }
