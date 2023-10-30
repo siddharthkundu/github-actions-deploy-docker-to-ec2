@@ -69,7 +69,6 @@ resource "aws_rds_cluster_instance" "aurora" {
 }
 
 provider "postgresql" {
-  depends_on = [aws_rds_cluster_instance]
   host     = aws_rds_cluster_instance.aurora.endpoint
   database = aws_rds_cluster.aurora[0].database_name
   port     = var.aws_postgres_database_port
