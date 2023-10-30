@@ -24,7 +24,7 @@ resource "aws_security_group_rule" "ingress_postgres" {
   security_group_id = aws_security_group.pg_security_group[0].id
 }
 
-module "rds_cluster" "aurora" {
+resource "rds_cluster" "aurora" {
   count          = var.aws_enable_postgres == "true" ? 1 : 0
   depends_on     = [data.aws_subnets.vpc_subnets]
   source         = "terraform-aws-modules/rds-aurora/aws"
