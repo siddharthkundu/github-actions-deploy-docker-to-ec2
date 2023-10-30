@@ -59,17 +59,17 @@ resource "aws_rds_cluster" "aurora" {
 
 resource "aws_rds_cluster_instance" "aurora" {
   db_subnet_group_name   = "${var.aws_resource_identifier}-pg"
-  cluster_identifier  = aws_rds_cluster.aurora.id
+  cluster_identifier  = aws_rds_cluster.aurora[0].id
   instance_class      = var.aws_postgres_instance_class
-  engine              = aws_rds_cluster.aurora.engine
-  engine_version      = aws_rds_cluster.aurora.engine_version
+  engine              = aws_rds_cluster.aurora[0].engine
+  engine_version      = aws_rds_cluster.aurora[0].engine_version
   apply_immediately   = true
   publicly_accessible = false
 }
 
 provider "postgresql" {
   host     = aws_rds_cluster_instance.aurora.endpoint
-  database = aws_rds_cluster.aurora.database_name
+  database = aws_rds_cluster.aurora[0].database_name
   port     = var.aws_postgres_database_port
 }
 
