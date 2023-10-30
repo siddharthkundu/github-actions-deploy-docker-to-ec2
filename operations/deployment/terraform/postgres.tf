@@ -58,6 +58,7 @@ resource "aws_rds_cluster" "aurora" {
 }
 
 resource "aws_rds_cluster_instance" "aurora" {
+  depends_on          = [aws_rds_cluster.aurora]
   db_subnet_group_name   = "${var.aws_resource_identifier}-pg"
   cluster_identifier  = aws_rds_cluster.aurora[0].id
   instance_class      = var.aws_postgres_instance_class
@@ -68,12 +69,14 @@ resource "aws_rds_cluster_instance" "aurora" {
 }
 
 provider "postgresql" {
+  depends_on = [aws_rds_cluster_instance]
   host     = aws_rds_cluster_instance.aurora.endpoint
   database = aws_rds_cluster.aurora[0].database_name
   port     = var.aws_postgres_database_port
 }
 
 resource "postgresql_database" "db" {
+  depends_on = [aws_rds_cluster_instance]
   for_each  = split(",", var.aws_postgres_database_name)
   name  = each.value
   owner = aws_rds_cluster.aurora[0].master_username
