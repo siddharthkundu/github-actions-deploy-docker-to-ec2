@@ -76,7 +76,7 @@ provider "postgresql" {
 resource "postgresql_database" "db" {
   for_each  = split(",", var.aws_postgres_database_name)
   name  = each.value
-  owner = aws_rds_cluster_instance.aurora.master_username
+  owner = aws_rds_cluster.aurora[0].master_username
 }
 
 resource "random_password" "rds" {
