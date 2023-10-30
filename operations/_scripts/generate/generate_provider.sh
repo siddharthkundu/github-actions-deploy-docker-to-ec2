@@ -21,6 +21,10 @@ terraform {
       source  = \"hashicorp/random\"
       version = \">= 2.2\"
     }
+    postgresql = {
+      source  = \"cyrilgdn/postgresql\"
+      version = \">=1.21.0\"
+    }
   }
 
   backend \"s3\" {
