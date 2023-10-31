@@ -58,6 +58,7 @@ resource "aws_rds_cluster" "aurora" {
 }
 
 resource "aws_rds_cluster_instance" "aurora" {
+  count          = var.aws_enable_postgres == "true" ? 1 : 0
   depends_on          = [aws_rds_cluster.aurora]
   db_subnet_group_name   = "${var.aws_resource_identifier}-pg"
   cluster_identifier  = aws_rds_cluster.aurora[0].id
