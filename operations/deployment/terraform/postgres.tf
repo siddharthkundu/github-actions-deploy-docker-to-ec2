@@ -71,10 +71,12 @@ provider "postgresql" {
   port     = var.aws_postgres_database_port
 }
 
+
+
 resource "postgresql_database" "db" {
   depends_on = [aws_rds_cluster_instance.aurora]
-  for_each  = split(",", var.aws_postgres_database_name)
-  name  = each.value
+  for_each  = toset( split(",", var.aws_postgres_database_name))
+  name  = each.key
   owner = aws_rds_cluster.aurora.master_username
 }
 
