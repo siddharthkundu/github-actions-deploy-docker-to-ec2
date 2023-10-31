@@ -36,7 +36,7 @@ resource "aws_rds_cluster" "aurora" {
   port                   = var.aws_postgres_database_port
   deletion_protection    = var.aws_postgres_database_protection
   storage_encrypted      = true
-  db_subnet_group_name   = "${var.aws_resource_identifier}-pg"
+  #db_subnet_group_name   = "${var.aws_resource_identifier}-pg"
   vpc_security_group_ids = [aws_security_group.pg_security_group.id]
 
   # TODO: take advantage of iam database auth
@@ -56,7 +56,7 @@ resource "aws_rds_cluster" "aurora" {
 
 resource "aws_rds_cluster_instance" "aurora" {
   depends_on          = [aws_rds_cluster.aurora]
-  db_subnet_group_name   = "${var.aws_resource_identifier}-pg"
+  #db_subnet_group_name   = "${var.aws_resource_identifier}-pg"
   cluster_identifier  = aws_rds_cluster.aurora.id
   instance_class      = var.aws_postgres_instance_class
   engine              = aws_rds_cluster.aurora.engine
