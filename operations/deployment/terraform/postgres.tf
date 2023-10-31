@@ -41,7 +41,7 @@ resource "aws_rds_cluster" "aurora" {
 
   # TODO: take advantage of iam database auth
   iam_database_authentication_enabled    = true
-  master_username                        = postgres
+  master_username                        = "postgres"
   master_password                        = random_password.rds.result
   apply_immediately                      = true
   skip_final_snapshot                    = var.aws_postgres_database_final_snapshot == "" ? true : false
