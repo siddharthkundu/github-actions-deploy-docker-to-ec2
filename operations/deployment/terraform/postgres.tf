@@ -23,7 +23,7 @@ resource "aws_security_group_rule" "ingress_postgres" {
 }
 
 resource "aws_rds_cluster" "aurora" {
-  depends_on     = [data.aws_subnets.vpc_subnets]
+  depends_on     = [data.aws_subnets.vpc_subnets,aws_security_group_rule.ingress_postgres]
   cluster_identifier = var.aws_resource_identifier
   engine         = var.aws_postgres_engine
   engine_version = var.aws_postgres_engine_version
@@ -70,8 +70,6 @@ provider "postgresql" {
   database = aws_rds_cluster.aurora.database_name
   port     = var.aws_postgres_database_port
 }
-
-
 
 resource "postgresql_database" "db" {
   depends_on = [aws_rds_cluster_instance.aurora]

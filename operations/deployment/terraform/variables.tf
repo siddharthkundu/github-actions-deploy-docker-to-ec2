@@ -312,7 +312,6 @@ variable "additional_tags" {
 
 }
 
-
 ## -- --- -- ##
 variable "application_mount_target" {
   type        = string
