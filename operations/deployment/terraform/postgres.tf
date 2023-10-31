@@ -46,9 +46,9 @@ resource "aws_rds_cluster" "aurora" {
   apply_immediately                      = true
   skip_final_snapshot                    = var.aws_postgres_database_final_snapshot == "" ? true : false
   snapshot_identifier                    = var.aws_postgres_database_final_snapshot
-  db_cluster_parameter_group_name        = var.aws_resource_identifier
+  #db_cluster_parameter_group_name        = var.aws_resource_identifier
 
-  db_instance_parameter_group_name        = var.aws_resource_identifier
+  #db_instance_parameter_group_name        = var.aws_resource_identifier
   enabled_cloudwatch_logs_exports = var.aws_postgres_engine == "aurora-postgresql" ? ["postgresql"] : ["audit","error","general","slowquery"]
   tags = {
     Name = "${var.aws_resource_identifier}-RDS"
