@@ -155,7 +155,7 @@ variable "aws_postgres_engine" {
 variable "aws_postgres_engine_version" {
   type        = string
   description = "The version of the engine to use for postgres.  Defaults to `11.13`."
-  default     = "11.13"
+  default     = "15.4"
 }
 variable "aws_postgres_instance_class" {
   type        = string
