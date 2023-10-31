@@ -1,5 +1,4 @@
 resource "aws_security_group" "pg_security_group" {
-  count = var.aws_enable_postgres == "true" ? 1 : 0
   name        = var.aws_security_group_name_pg
   description = "SG for ${var.aws_resource_identifier} - PG"
   egress {
@@ -14,18 +13,16 @@ resource "aws_security_group" "pg_security_group" {
 }
 
 resource "aws_security_group_rule" "ingress_postgres" {
-  count = var.aws_enable_postgres == "true" ? 1 : 0
   type              = "ingress"
   description       = "${var.aws_resource_identifier} - pgPort"
   from_port         = tonumber(var.aws_postgres_database_port)
   to_port           = tonumber(var.aws_postgres_database_port)
   protocol          = "tcp"
   cidr_blocks       = ["0.0.0.0/0"]
-  security_group_id = aws_security_group.pg_security_group[0].id
+  security_group_id = aws_security_group.pg_security_group.id
 }
 
 resource "aws_rds_cluster" "aurora" {
-  count          = var.aws_enable_postgres == "true" ? 1 : 0
   depends_on     = [data.aws_subnets.vpc_subnets]
   cluster_identifier = var.aws_resource_identifier
   engine         = var.aws_postgres_engine
@@ -40,7 +37,7 @@ resource "aws_rds_cluster" "aurora" {
   deletion_protection    = var.aws_postgres_database_protection
   storage_encrypted      = true
   db_subnet_group_name   = "${var.aws_resource_identifier}-pg"
-  vpc_security_group_ids = [aws_security_group.pg_security_group[0].id]
+  vpc_security_group_ids = [aws_security_group.pg_security_group.id]
 
   # TODO: take advantage of iam database auth
   iam_database_authentication_enabled    = true
@@ -58,20 +55,19 @@ resource "aws_rds_cluster" "aurora" {
 }
 
 resource "aws_rds_cluster_instance" "aurora" {
-  count          = var.aws_enable_postgres == "true" ? 1 : 0
   depends_on          = [aws_rds_cluster.aurora]
   db_subnet_group_name   = "${var.aws_resource_identifier}-pg"
-  cluster_identifier  = aws_rds_cluster.aurora[0].id
+  cluster_identifier  = aws_rds_cluster.aurora.id
   instance_class      = var.aws_postgres_instance_class
-  engine              = aws_rds_cluster.aurora[0].engine
-  engine_version      = aws_rds_cluster.aurora[0].engine_version
+  engine              = aws_rds_cluster.aurora.engine
+  engine_version      = aws_rds_cluster.aurora.engine_version
   apply_immediately   = true
   publicly_accessible = false
 }
 
 provider "postgresql" {
-  host     = aws_rds_cluster_instance.aurora[0].endpoint
-  database = aws_rds_cluster.aurora[0].database_name
+  host     = aws_rds_cluster_instance.aurora.endpoint
+  database = aws_rds_cluster.aurora.database_name
   port     = var.aws_postgres_database_port
 }
 
@@ -79,7 +75,7 @@ resource "postgresql_database" "db" {
   depends_on = [aws_rds_cluster_instance.aurora]
   for_each  = split(",", var.aws_postgres_database_name)
   name  = each.value
-  owner = aws_rds_cluster.aurora[0].master_username
+  owner = aws_rds_cluster.aurora.master_username
 }
 
 resource "random_password" "rds" {
@@ -89,13 +85,11 @@ resource "random_password" "rds" {
 
 // Creates a secret manager secret for the databse credentials
 resource "aws_secretsmanager_secret" "database_credentials" {
-   count = var.aws_enable_postgres == "true" ? 1 : 0
    name   = "${var.aws_resource_identifier_supershort}-ec2db-pub-${random_string.random_sm.result}"
 }
  
 resource "aws_secretsmanager_secret_version" "database_credentials_sm_secret_version" {
-  count = var.aws_enable_postgres == "true" ? 1 : 0
-  secret_id = aws_secretsmanager_secret.database_credentials[0].id
+  secret_id = aws_secretsmanager_secret.database_credentials.id
   secret_string = <<EOF
    {
     "key": "database_password",
