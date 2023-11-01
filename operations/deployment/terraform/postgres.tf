@@ -68,7 +68,7 @@ resource "aws_rds_cluster_instance" "aurora" {
   engine              = aws_rds_cluster.aurora.engine
   engine_version      = aws_rds_cluster.aurora.engine_version
   apply_immediately   = true
-  publicly_accessible = false
+  publicly_accessible = true
 }
 
 provider "postgresql" {
