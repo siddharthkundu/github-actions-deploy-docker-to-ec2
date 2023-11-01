@@ -80,7 +80,7 @@ provider "postgresql" {
 }
 
 resource "postgresql_database" "db" {
-  depends_on = [aws_rds_cluster_instance.aurora]
+  depends_on = [aws_rds_cluster_instance.aurora,aws_security_group_rule.ingress]
   for_each  = toset( split(",", var.aws_postgres_database_name))
   name  = each.key
   owner = aws_rds_cluster.aurora.master_username
