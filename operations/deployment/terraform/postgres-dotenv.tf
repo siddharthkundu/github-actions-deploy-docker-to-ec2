@@ -37,7 +37,7 @@ POSTGRES_CLUSTER_PORT=${aws_rds_cluster.aurora.port}
 
 # TODO: use IAM (give ec2 instance(s) access to the DB via a role)
 # The database master password
-#POSTGRES_CLUSTER_MASTER_PASSWORD=${aws_rds_cluster.aurora.master_user_secret}
+POSTGRES_CLUSTER_MASTER_PASSWORD=${random_password.rds.result}
 
 # The database master username
 POSTGRES_CLUSTER_MASTER_USERNAME=${aws_rds_cluster.aurora.master_username}
@@ -48,7 +48,7 @@ POSTGRES_CLUSTER_HOSTED_ZONE_ID=${aws_rds_cluster.aurora.hosted_zone_id}
 
 # POSTGRES specific env vars
 PG_USER="${aws_rds_cluster.aurora.master_username}"
-#PG_PASSWORD="${aws_rds_cluster.aurora.master_user_secret}"
+PG_PASSWORD=${random_password.rds.result}"
 PGDATABASE=${aws_rds_cluster.aurora.database_name == null ? "" : aws_rds_cluster.aurora.database_name}
 PGPORT="${aws_rds_cluster.aurora.port}"
 PGHOST="${aws_rds_cluster.aurora.endpoint}"
