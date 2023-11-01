@@ -28,6 +28,11 @@ resource "aws_rds_cluster" "aurora" {
   engine         = var.aws_postgres_engine
   engine_version = var.aws_postgres_engine_version
 
+  serverlessv2_scaling_configuration {
+    max_capacity = 1.0
+    min_capacity = 0.5
+  }
+
   # Todo: handle vpc/networking explicitly
   # vpc_id                 = var.vpc_id
   # allowed_cidr_blocks    = [var.vpc_cidr]
