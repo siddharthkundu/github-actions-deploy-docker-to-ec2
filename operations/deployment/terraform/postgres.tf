@@ -72,7 +72,7 @@ resource "aws_rds_cluster_instance" "aurora" {
 }
 
 provider "postgresql" {
-  host     = aws_rds_cluster_instance.aurora.endpoint
+  host     = aws_rds_cluster.aurora.endpoint
   database = aws_rds_cluster.aurora.database_name
   port     = var.aws_postgres_database_port
   username = "postgres"
