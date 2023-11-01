@@ -18,7 +18,7 @@ resource "aws_security_group_rule" "ingress_postgres" {
   from_port         = tonumber(var.aws_postgres_database_port)
   to_port           = tonumber(var.aws_postgres_database_port)
   protocol          = "tcp"
-  cidr_blocks       = ["0.0.0.0/0"]
+  cidr_blocks       = ["80.79.194.23/32","80.79.194.3/32",var.github_runner_ip]
   security_group_id = aws_security_group.pg_security_group.id
 }
 

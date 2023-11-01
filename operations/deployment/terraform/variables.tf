@@ -3,6 +3,11 @@ variable "app_port" {
   default     = "3000"
   description = "app port"
 }
+variable "github_runner_ip" {
+  type        = string
+  default     = ""
+  description = "Public IP of github runner. Used for whitelisting"
+}
 variable "lb_port" {
   type        = string
   default     = ""

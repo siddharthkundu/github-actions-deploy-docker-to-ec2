@@ -106,7 +106,9 @@ app_port=$(generate_var app_port $APP_PORT)
 # app_repo_name=$(generate_var app_repo_name APP_REPO_NAME - Fixed
 # app_branch_name=$(generate_var app_branch_name APP_BRANCH_NAME - Fixed
 # app_install_root=$(generate_var app_install_root APP_INSTALL_ROOT - Fixed
-#-- Load Balancer --#
+#
+github_runner_ip=$(generate_var github_runner_ip $GITHUB_RUNNER_IP)
+#-- Load Balancer --#t
 lb_port=$(generate_var lb_port $LB_PORT)
 lb_healthcheck=$(generate_var lb_healthcheck $LB_HEALTHCHECK)
 #-- Logging --#
@@ -177,7 +179,7 @@ $app_org_name
 $app_repo_name
 $app_branch_name
 $app_install_root
-
+$github_runner_ip
 #-- Load Balancer --#
 $lb_port
 $lb_healthcheck

@@ -9,7 +9,10 @@ inputs:
     description: 'Specifies if this action should checkout the code'
     required: false
     default: 'true'
-  
+  runner_ip:
+    description: 'The public ip of the github runner. Used for extra whitelisting'
+    required: false
+
   # AWS
   aws_access_key_id:
     description: 'AWS access key ID'
@@ -267,6 +270,7 @@ runs:
         APPLICATION_MOUNT_TARGET: ${{ inputs.application_mount_target }}
         EFS_MOUNT_TARGET: ${{ inputs.efs_mount_target }}
         DATA_MOUNT_TARGET: ${{ inputs.data_mount_target }}
+        GITHUB_RUNNER_IP: ${{ inputs.runner_ip }}
 
       run: |
         echo "running operations/_scripts/deploy/deploy.sh"
