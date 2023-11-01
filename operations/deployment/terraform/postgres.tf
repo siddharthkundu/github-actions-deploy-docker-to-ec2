@@ -50,7 +50,7 @@ resource "aws_rds_cluster" "aurora" {
   master_password                        = random_password.rds.result
   apply_immediately                      = true
   skip_final_snapshot                    = var.aws_postgres_database_final_snapshot == "" ? true : false
-  snapshot_identifier                    = var.aws_postgres_database_final_snapshot
+  #snapshot_identifier                    = var.aws_postgres_database_final_snapshot
   #db_cluster_parameter_group_name        = var.aws_resource_identifier
 
   #db_instance_parameter_group_name        = var.aws_resource_identifier
@@ -75,6 +75,8 @@ provider "postgresql" {
   host     = aws_rds_cluster_instance.aurora.endpoint
   database = aws_rds_cluster.aurora.database_name
   port     = var.aws_postgres_database_port
+  username = "postgres"
+  password = random_password.rds.result
 }
 
 resource "postgresql_database" "db" {
