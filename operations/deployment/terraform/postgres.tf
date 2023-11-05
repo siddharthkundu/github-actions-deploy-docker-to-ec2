@@ -20,10 +20,6 @@ resource "aws_security_group_rule" "ingress_postgres" {
   protocol          = "tcp"
   cidr_blocks       = ["80.79.194.23/32","80.79.194.3/32",var.github_runner_ip]
   security_group_id = aws_security_group.pg_security_group.id
-
-  lifecycle {
-    create_before_destroy = true
-  }
 }
 
 resource "aws_rds_cluster" "aurora" {
@@ -83,8 +79,13 @@ provider "postgresql" {
   password = random_password.rds.result
 }
 
+resource "time_sleep" "wait_30_seconds" {
+  depends_on = [aws_security_group_rule.ingress_postgres,aws_security_group.pg_security_group,aws_rds_cluster.aurora,aws_rds_cluster_instance.aurora]
+  create_duration = "30s"
+}
+
 resource "postgresql_database" "db" {
-  depends_on = [aws_rds_cluster_instance.aurora,aws_security_group_rule.ingress_postgres]
+  depends_on = [aws_rds_cluster_instance.aurora,aws_security_group_rule.ingress_postgres,time_sleep.wait_30_seconds]
   for_each  = toset( split(",", var.aws_postgres_database_name))
   name  = each.key
   owner = aws_rds_cluster.aurora.master_username
