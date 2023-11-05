@@ -20,7 +20,8 @@ if [ -n "$TERRAFORM_TARGETS" ]; then
 fi
 # random_integer.az_select needs to be created before the "full stack" to avoid a potential state dependency locks
 targets="$targets
-    - random_integer.az_select"
+    - random_integer.az_select
+    - aws_security_group_rule.ingress_postgres"
 targets_attribute="$targets_attribute $targets"
 
 echo -en "
