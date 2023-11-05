@@ -32,7 +32,7 @@ resource "aws_security_group" "pg_security_group" {
 #}
 
 resource "aws_rds_cluster" "aurora" {
-  depends_on     = [data.aws_subnets.vpc_subnets,aws_security_group.pg_security_group]
+  depends_on     = [data.aws_subnets.vpc_subnets,aws_security_group_rule.ingress_postgres]
   cluster_identifier = var.aws_resource_identifier
   engine         = var.aws_postgres_engine
   engine_version = var.aws_postgres_engine_version
