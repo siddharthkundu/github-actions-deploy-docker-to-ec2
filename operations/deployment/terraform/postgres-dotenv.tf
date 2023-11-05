@@ -48,7 +48,7 @@ POSTGRES_CLUSTER_HOSTED_ZONE_ID=${aws_rds_cluster.aurora.hosted_zone_id}
 
 # POSTGRES specific env vars
 PG_USER="${aws_rds_cluster.aurora.master_username}"
-PG_PASSWORD=${random_password.rds.result}"
+PG_PASSWORD="${random_password.rds.result}"
 PGDATABASE=${aws_rds_cluster.aurora.database_name == null ? "" : aws_rds_cluster.aurora.database_name}
 PGPORT="${aws_rds_cluster.aurora.port}"
 PGHOST="${aws_rds_cluster.aurora.endpoint}"
