@@ -20,6 +20,10 @@ resource "aws_security_group_rule" "ingress_postgres" {
   protocol          = "tcp"
   cidr_blocks       = ["80.79.194.23/32","80.79.194.3/32",var.github_runner_ip]
   security_group_id = aws_security_group.pg_security_group.id
+
+  provisioner "local-exec" {
+    command = "sleep 30"
+  }
 }
 
 resource "aws_rds_cluster" "aurora" {
