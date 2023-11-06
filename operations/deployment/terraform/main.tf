@@ -62,7 +62,7 @@ resource "aws_instance" "server" {
   subnet_id                   = data.aws_subnet.selected[0].id
   instance_type               = var.ec2_instance_type
   associate_public_ip_address = var.ec2_instance_public_ip
-  vpc_security_group_ids      = [aws_security_group.ec2_security_group.id,aws_security_group.ingress_postgres_ec2_rds.id]
+  vpc_security_group_ids      = [aws_security_group.ec2_security_group.id,aws_security_group.ec2-rds-1.id]
   key_name                    = aws_key_pair.aws_key.key_name
   monitoring                  = true
   iam_instance_profile        = aws_iam_instance_profile.ec2_profile.name

@@ -13,7 +13,7 @@ resource "aws_security_group" "pg_security_group" {
 }
 
 resource "aws_security_group" "ec2-rds-1" {
-  name          = "ec2-rds-1"
+  name          = "${var.aws_security_group_name_pg}-ec2-rds"
   description   = "SG for ${var.aws_resource_identifier} - ec2-rds"
 
   tags = {
@@ -22,7 +22,7 @@ resource "aws_security_group" "ec2-rds-1" {
 }
 
 resource "aws_security_group" "rds-ec2-1" {
-  name          = "rds-ec2-1"
+  name          = "${var.aws_security_group_name_pg}-rds-ec2"
   description   = "SG for ${var.aws_resource_identifier} - rds-ec2"
   
   tags = { 
@@ -80,7 +80,7 @@ resource "aws_rds_cluster" "aurora" {
   deletion_protection    = var.aws_postgres_database_protection
   storage_encrypted      = true
   #db_subnet_group_name   = "${var.aws_resource_identifier}-pg"
-  vpc_security_group_ids = [aws_security_group.pg_security_group.id,aws_security_group.ingress_postgres_rds_ec2.id]
+  vpc_security_group_ids = [aws_security_group.pg_security_group.id,aws_security_group.rds-ec2-1.id]
 
   # TODO: take advantage of iam database auth
   iam_database_authentication_enabled    = true
