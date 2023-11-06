@@ -12,6 +12,24 @@ resource "aws_security_group" "pg_security_group" {
   }
 }
 
+resource "aws_security_group" "ec2-rds-1" {
+  name          = "ec2-rds-1"
+  description   = "SG for ${var.aws_resource_identifier} - ec2-rds"
+
+  tags = {
+    Name = "${var.aws_resource_identifier}-ec2-rds"
+  }
+}
+
+resource "aws_security_group" "rds-ec2-1" {
+  name          = "rds-ec2-1"
+  description   = "SG for ${var.aws_resource_identifier} - rds-ec2"
+  
+  tags = { 
+    Name = "${var.aws_resource_identifier}-ec2-rds"
+  }
+}
+
 resource "aws_security_group_rule" "ingress_postgres" {
   type              = "ingress"
   description       = "${var.aws_resource_identifier} - pgPort"
@@ -22,23 +40,24 @@ resource "aws_security_group_rule" "ingress_postgres" {
   security_group_id = aws_security_group.pg_security_group.id
 }
 
-resource "aws_security_group_rule" "ingress_postgres_ec2" {
+resource "aws_security_group_rule" "ingress_postgres_rds_ec2" {
   type              = "ingress"
   description       = "${var.aws_resource_identifier} - rds-ec2"
   from_port         = tonumber(var.aws_postgres_database_port)
   to_port           = tonumber(var.aws_postgres_database_port)
   protocol          = "tcp"
-  security_group_id = aws_rds_cluster.aurora.security_group_id
-  source_security_group_id = aws_security_group.pg_security_group.id
+  security_group_id = aws_security_group.rds-ec2-1.id
+  source_security_group_id = aws_security_group.ec2-rds-1.id
 }
 
-resource "aws_security_group_rule" "egress_postgres_ec2" {
+resource "aws_security_group_rule" "egress_postgres_ec2_rds" {
   type        = "egress"
-  from_port   = 0
-  to_port     = 0
-  protocol    = "-1"
-  security_group_id = aws_security_group.pg_security_group.id
-  source_security_group_id = aws_rds_cluster.aurora.security_group_id
+  description = "${var.aws_resource_identifier} - ec2-rds"
+  from_port   = tonumber(var.aws_postgres_database_port)
+  to_port     = tonumber(var.aws_postgres_database_port)
+  protocol    = "tcp"
+  security_group_id = aws_security_group.ec2-rds-1.id
+  source_security_group_id = aws_security_group.rds-ec2-1.id
 }
 
 resource "aws_rds_cluster" "aurora" {
@@ -55,13 +74,13 @@ resource "aws_rds_cluster" "aurora" {
   # Todo: handle vpc/networking explicitly
   # vpc_id                 = var.vpc_id
   # allowed_cidr_blocks    = [var.vpc_cidr]
-  #subnets                  = var.aws_postgres_subnets == null || length(var.aws_postgres_subnets) == 0 ? data.aws_subnets.vpc_subnets.ids : var.aws_postgres_subnets
+  subnets                  = var.aws_postgres_subnets == null || length(var.aws_postgres_subnets) == 0 ? data.aws_subnets.vpc_subnets.ids : var.aws_postgres_subnets
 
   port                   = var.aws_postgres_database_port
   deletion_protection    = var.aws_postgres_database_protection
   storage_encrypted      = true
   #db_subnet_group_name   = "${var.aws_resource_identifier}-pg"
-  vpc_security_group_ids = [aws_security_group.pg_security_group.id]
+  vpc_security_group_ids = [aws_security_group.pg_security_group.id,aws_security_group.ingress_postgres_rds_ec2.id]
 
   # TODO: take advantage of iam database auth
   iam_database_authentication_enabled    = true
