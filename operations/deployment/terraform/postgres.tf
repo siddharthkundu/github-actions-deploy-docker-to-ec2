@@ -22,6 +22,25 @@ resource "aws_security_group_rule" "ingress_postgres" {
   security_group_id = aws_security_group.pg_security_group.id
 }
 
+resource "aws_security_group_rule" "ingress_postgres_ec2" {
+  type              = "ingress"
+  description       = "${var.aws_resource_identifier} - rds-ec2"
+  from_port         = tonumber(var.aws_postgres_database_port)
+  to_port           = tonumber(var.aws_postgres_database_port)
+  protocol          = "tcp"
+  security_group_id = aws_rds_cluster.aurora.security_group_id
+  source_security_group_id = aws_security_group.pg_security_group.id
+}
+
+resource "aws_security_group_rule" "egress_postgres_ec2" {
+  type        = "egress"
+  from_port   = 0
+  to_port     = 0
+  protocol    = "-1"
+  security_group_id = aws_security_group.pg_security_group.id
+  source_security_group_id = aws_rds_cluster.aurora.security_group_id
+}
+
 resource "aws_rds_cluster" "aurora" {
   depends_on     = [data.aws_subnets.vpc_subnets,aws_security_group_rule.ingress_postgres]
   cluster_identifier = var.aws_resource_identifier
