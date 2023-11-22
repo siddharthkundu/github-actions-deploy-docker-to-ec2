@@ -44,6 +44,6 @@ resource "aws_security_group_rule" "ingress_lb_port" {
   from_port         = tonumber(var.lb_port != "" ? var.lb_port : (local.cert_available ? 443 : 80))
   to_port           = tonumber(var.lb_port != "" ? var.lb_port : (local.cert_available ? 443 : 80))
   protocol          = "tcp"
-  cidr_blocks       = ["80.79.194.23/32","80.79.194.3/32","81.204.57.46/32","143.178.87.144/32","129.126.185.224/32","129.126.203.153/32"]
+  cidr_blocks       = ["80.79.194.23/32","80.79.194.3/32","81.204.57.46/32","143.178.87.144/32","129.126.185.224/32","129.126.203.153/32","208.88.129.11/32"]
   security_group_id = aws_security_group.ec2_security_group.id
 }
