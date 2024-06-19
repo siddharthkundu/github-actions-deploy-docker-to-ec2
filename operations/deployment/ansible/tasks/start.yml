@@ -1,5 +1,5 @@
 - name: Start docker-compose with remove orphans
-  ansible.builtin.command: "docker compose --project-directory {{ app_install_root }}/{{ app_repo_name }} up --detach --build --force-recreate --remove-orphans"
+  ansible.builtin.command: "docker compose --project-directory {{ app_install_root }}/{{ app_repo_name }} up --profile test --detach --build --force-recreate --remove-orphans"
   register: output
   async: "{{ ansible_start_docker_timeout }}"
   poll: 5
